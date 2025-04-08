@@ -1,14 +1,18 @@
 import express from "express";
+import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./docs/swagger";
 import { userRoutes } from "./routes/userRoutes";
+import { authRoutes } from "./routes/authRoutes";
 
 const app = express();
 app.use(express.json());
+dotenv.config();
 
 app.use("/api/v1", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/users", userRoutes);
+app.use("/auth", authRoutes);
 
 app.get("/", (_req, res) => {
   res.send("API rodando");

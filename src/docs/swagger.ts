@@ -6,6 +6,15 @@ const swaggerDefinition = {
     title: "CV Generator API",
     version: "1.0.0",
   },
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
+  },
 };
 
 const options = {

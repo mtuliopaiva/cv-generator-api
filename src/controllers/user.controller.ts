@@ -3,7 +3,12 @@ import * as userService from "../service/user.service";
 
 export const getAllUsers = async (_req: Request, res: Response) => {
   const users = await userService.getAllUsers();
-  res.json(users);
+  const formattedUsers = users.map((user) => ({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+  }));
+  res.status(200).json(formattedUsers);
 };
 
 export const findUserById = async (
@@ -16,13 +21,11 @@ export const findUserById = async (
     res.status(404).json({ message: "Usuário não encontrado" });
     return;
   }
-  res.json(user);
-};
-
-export const createUser = async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
-  const user = await userService.createUser(name, email, password);
-  res.status(201).json(user);
+  res.status(201).json({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+  });
 };
 
 export const updateUser = async (req: Request, res: Response) => {

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as userController from "../controllers/user.controller";
+import { isAuthenticated } from "../middlewares/auth.middleware";
 
 export const userRoutes = Router();
 
@@ -16,11 +17,13 @@ export const userRoutes = Router();
  *   get:
  *     summary: Lista todos os usuários
  *     tags: [Users]
+ *     security:
+ *         - bearerAuth: []
  *     responses:
  *       200:
  *         description: Lista de usuários
  */
-userRoutes.get("/", userController.getAllUsers);
+userRoutes.get("/", isAuthenticated, userController.getAllUsers);
 
 /**
  * @swagger
@@ -28,6 +31,8 @@ userRoutes.get("/", userController.getAllUsers);
  *   get:
  *     summary: Busca um usuário por ID
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -40,36 +45,7 @@ userRoutes.get("/", userController.getAllUsers);
  *       404:
  *         description: Usuário não encontrado
  */
-userRoutes.get("/:id", userController.findUserById);
-
-/**
- * @swagger
- * /users:
- *   post:
- *     summary: Cria um novo usuário
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - name
- *               - email
- *               - password
- *             properties:
- *               name:
- *                 type: string
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       201:
- *         description: Usuário criado
- */
-userRoutes.post("/", userController.createUser);
+userRoutes.get("/:id", isAuthenticated, userController.findUserById);
 
 /**
  * @swagger
