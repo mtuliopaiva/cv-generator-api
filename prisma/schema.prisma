@@ -14,11 +14,46 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  password  String
-  email     String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  id            Int            @id @default(autoincrement())
+  name          String
+  password      String
+  email         String         @unique
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+  ResumeContent ResumeContent?
+  Resume        Resume[]
+}
+
+model Resume {
+  id         Int       @id @default(autoincrement())
+  title      String
+  templateId Int?
+  userId     Int
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  template   Template? @relation(fields: [templateId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Template {
+  id        Int      @id @default(autoincrement())
+  title     String
+  resumes   Resume[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ResumeContent {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  fullName  String
+  email     String
+  phone     String
+  objective String
+  summary   String
+  keywords  String[]
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
