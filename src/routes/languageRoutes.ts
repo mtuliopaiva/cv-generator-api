@@ -1,27 +1,27 @@
 import { Router } from "express";
-import {
-  createResume,
-  deleteResume,
-  getResumesByUser,
-  updateResume,
-} from "../controllers/resume.controller";
 import { isAuthenticated } from "../middlewares/auth.middleware";
+import {
+  createLanguage,
+  deleteLanguage,
+  getLanguagesByUser,
+  updateLanguage,
+} from "../controllers/language.controller";
 
-export const resumeRoutes = Router();
+export const languageRoutes = Router();
 
 /**
  * @swagger
  * tags:
- *   name: Resume
- *   description: Gerenciamento dos currículos (vinculados ao usuário e templates)
+ *   name: Language
+ *   description: Gerenciamento de idiomas do usuário
  */
 
 /**
  * @swagger
- * /resume/{userId}:
+ * /language/{userId}:
  *   post:
- *     summary: Cria um novo currículo para o usuário
- *     tags: [Resume]
+ *     summary: Cria um novo idioma para o usuário
+ *     tags: [Language]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -38,25 +38,25 @@ export const resumeRoutes = Router();
  *           schema:
  *             type: object
  *             required:
- *               - title
+ *               - name
+ *               - level
  *             properties:
- *               title:
+ *               name:
  *                 type: string
- *               templateId:
- *                 type: integer
- *                 nullable: true
+ *               level:
+ *                 type: string
  *     responses:
  *       201:
- *         description: Currículo criado com sucesso
+ *         description: Idioma criado com sucesso
  */
-resumeRoutes.post("/:userId", isAuthenticated, createResume);
+languageRoutes.post("/:userId", isAuthenticated, createLanguage);
 
 /**
  * @swagger
- * /resume/{userId}:
+ * /language/{userId}:
  *   get:
- *     summary: Lista todos os currículos de um usuário
- *     tags: [Resume]
+ *     summary: Lista os idiomas do usuário
+ *     tags: [Language]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -68,25 +68,25 @@ resumeRoutes.post("/:userId", isAuthenticated, createResume);
  *         description: ID do usuário
  *     responses:
  *       200:
- *         description: Lista de currículos encontrados
+ *         description: Lista de idiomas retornada com sucesso
  */
-resumeRoutes.get("/:userId", isAuthenticated, getResumesByUser);
+languageRoutes.get("/:userId", isAuthenticated, getLanguagesByUser);
 
 /**
  * @swagger
- * /resume/{resumeId}:
+ * /language/{languageId}:
  *   put:
- *     summary: Atualiza o título ou template de um currículo
- *     tags: [Resume]
+ *     summary: Atualiza um idioma
+ *     tags: [Language]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: resumeId
+ *         name: languageId
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID do currículo
+ *         description: ID do idioma
  *     requestBody:
  *       required: true
  *       content:
@@ -94,34 +94,33 @@ resumeRoutes.get("/:userId", isAuthenticated, getResumesByUser);
  *           schema:
  *             type: object
  *             properties:
- *               title:
+ *               name:
  *                 type: string
- *               templateId:
- *                 type: integer
- *                 nullable: true
+ *               level:
+ *                 type: string
  *     responses:
  *       200:
- *         description: Currículo atualizado com sucesso
+ *         description: Idioma atualizado com sucesso
  */
-resumeRoutes.put("/:resumeId", isAuthenticated, updateResume);
+languageRoutes.put("/:languageId", isAuthenticated, updateLanguage);
 
 /**
  * @swagger
- * /resume/{resumeId}:
+ * /language/{languageId}:
  *   delete:
- *     summary: Deleta um currículo do usuário
- *     tags: [Resume]
+ *     summary: Deleta um idioma
+ *     tags: [Language]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: resumeId
+ *         name: languageId
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID do currículo
+ *         description: ID do idioma
  *     responses:
  *       204:
- *         description: Currículo deletado com sucesso
+ *         description: Idioma removido com sucesso
  */
-resumeRoutes.delete("/:resumeId", isAuthenticated, deleteResume);
+languageRoutes.delete("/:languageId", isAuthenticated, deleteLanguage);

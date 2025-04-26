@@ -1,52 +1,45 @@
 import { Request, Response } from "express";
-import * as resumeContentService from "../service/resume.service";
+import * as resumeService from "../service/resume.service";
 
-export const createResumeContent = async (
+export const createResume = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   const userId = Number(req.params.userId);
-  const data = req.body;
+  const { title, templateId } = req.body;
 
-  const existing = await resumeContentService.getByUserId(userId);
-  if (existing) {
-    res
-      .status(409)
-      .json({ message: "ResumeContent já existe para este usuário" });
-    return;
-  }
-
-  const created = await resumeContentService.create(userId, data);
+  const created = await resumeService.createResume(userId, title, templateId);
   res.status(201).json(created);
 };
 
-export const deleteResumeContent = async (
+export const getResumesByUser = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   const userId = Number(req.params.userId);
-  await resumeContentService.remove(userId);
-  res.status(204).send();
+
+  const resumes = await resumeService.getResumesByUser(userId);
+
+  res.status(200).json(resumes);
 };
 
-export const getResumeContent = async (
+export const updateResume = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const userId = Number(req.params.userId);
-  const content = await resumeContentService.getByUserId(userId);
+  const resumeId = Number(req.params.resumeId);
+  const { title, templateId } = req.body;
 
-  if (!content) {
-    res.status(404).json({ message: "Conteúdo não encontrado" });
-    return;
-  }
-
-  res.status(200).json(content);
-};
-
-export const updateResumeContent = async (req: Request, res: Response) => {
-  const userId = Number(req.params.userId);
-  const data = req.body;
-  const updated = await resumeContentService.updateOrCreate(userId, data);
+  const updated = await resumeService.updateResume(resumeId, title, templateId);
   res.status(200).json(updated);
+};
+
+export const deleteResume = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const resumeId = Number(req.params.resumeId);
+
+  await resumeService.deleteResume(resumeId);
+  res.status(204).send();
 };

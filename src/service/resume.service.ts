@@ -1,35 +1,42 @@
 import { prisma } from "../infra/prisma/prismaClient";
 
-export const create = (userId: number, data: any) => {
-  return prisma.resumeContent.create({
+export const createResume = (
+  userId: number,
+  title: string,
+  templateId?: number
+) => {
+  return prisma.resume.create({
     data: {
-      ...data,
       userId,
+      title,
+      templateId,
     },
   });
 };
 
-export const getByUserId = (userId: number) => {
-  return prisma.resumeContent.findUnique({ where: { userId } });
-};
-
-export const updateOrCreate = async (userId: number, data: any) => {
-  const existing = await prisma.resumeContent.findUnique({ where: { userId } });
-
-  if (existing) {
-    return prisma.resumeContent.update({
-      where: { userId },
-      data,
-    });
-  }
-
-  return prisma.resumeContent.create({
-    data: { ...data, userId },
+export const getResumesByUser = (userId: number) => {
+  return prisma.resume.findMany({
+    where: { userId },
+    include: { template: true },
   });
 };
 
-export const remove = (userId: number) => {
-  return prisma.resumeContent.delete({
-    where: { userId },
+export const updateResume = (
+  resumeId: number,
+  title: string,
+  templateId?: number
+) => {
+  return prisma.resume.update({
+    where: { id: resumeId },
+    data: {
+      title,
+      templateId,
+    },
+  });
+};
+
+export const deleteResume = (resumeId: number) => {
+  return prisma.resume.delete({
+    where: { id: resumeId },
   });
 };
